@@ -1,2 +1,2 @@
-# cafeteria-back-end
-Projeto final da cadeira de POO
+# cafeteria-front-end
+Projeto final da cadeira de Programação Front-End
