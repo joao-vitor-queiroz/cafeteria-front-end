@@ -14,7 +14,7 @@ const CATEGORIES: { label: string; value: ProductCategory | 'all' }[] = [
 ];
 
 export default function HomePage() {
-  const { data: products, isLoading, isError, error, refetch } = useProducts();
+  const { data: products, isLoading, isError, refetch } = useProducts();
   const [selectedCategory, setSelectedCategory] = useState<
     ProductCategory | 'all'
   >('all');
