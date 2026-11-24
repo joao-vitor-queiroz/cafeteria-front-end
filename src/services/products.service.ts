@@ -1,70 +1,47 @@
-import { Product } from '@/types';
+import { ApiResponse, Product } from '@/types';
 
 /**
- * Dados iniciais de produtos para a cafeteria.
- * Servirão como fallback e mock enquanto o backend não estiver integrado.
- */
-const MOCK_PRODUCTS: Product[] = [
-  {
-    id: 'prod-1',
-    name: 'Espresso Tradicional',
-    description: 'Café espresso puro, encorpado e com crema aveludada.',
-    price: 7.5,
-    category: 'coffee',
-    isAvailable: true,
-    preparationTimeMinutes: 5,
-  },
-  {
-    id: 'prod-2',
-    name: 'Cappuccino Italiano',
-    description: 'Espresso com leite vaporizado e uma camada generosa de espuma.',
-    price: 12.0,
-    category: 'coffee',
-    isAvailable: true,
-    preparationTimeMinutes: 7,
-  },
-  {
-    id: 'prod-3',
-    name: 'Croissant Francês de Manteiga',
-    description: 'Massa folhada artesanal, crocante por fora e macia por dentro.',
-    price: 14.0,
-    category: 'bakery',
-    isAvailable: true,
-    preparationTimeMinutes: 3,
-  },
-  {
-    id: 'prod-4',
-    name: 'Chá Verde com Hortelã',
-    description: 'Chá verde premium com folhas frescas de hortelã orgânica.',
-    price: 9.0,
-    category: 'tea',
-    isAvailable: true,
-    preparationTimeMinutes: 5,
-  },
-  {
-    id: 'prod-5',
-    name: 'Torta de Limão Siciliano',
-    description: 'Base crocante com creme de limão e merengue tostado.',
-    price: 16.5,
-    category: 'desserts',
-    isAvailable: true,
-    preparationTimeMinutes: 2,
-  },
-];
-
-/**
- * Camada de serviço de produtos.
- * Abstrai chamadas de API, facilitando testes, cache e futura migração para APIs REST/GraphQL.
+ * Camada de serviço de produtos no cliente.
+ * Consome o endpoint interno /api/products do Next.js (BFF).
+ * Arquitetura segura: O cliente NUNCA conversa diretamente com o Back4App,
+ * mantendo as chaves de API restritas ao ambiente do servidor.
  */
 export const productsService = {
   async getProducts(): Promise<Product[]> {
-    // Simula latência de rede realista
-    await new Promise((resolve) => setTimeout(resolve, 300));
-    return MOCK_PRODUCTS;
+    const response = await fetch('/api/products', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      // Cache gerenciado pelo TanStack Query
+      cache: 'no-store',
+    });
+
+    if (!response.ok) {
+      throw new Error('Falha ao carregar o cardápio da cafeteria.');
+    }
+
+    const result: ApiResponse<Product[]> = await response.json();
+    return result.data ?? [];
   },
 
-  async getProductById(id: string): Promise<Product | undefined> {
-    await new Promise((resolve) => setTimeout(resolve, 200));
-    return MOCK_PRODUCTS.find((p) => p.id === id);
+  async createProduct(
+    product: Omit<Product, 'id' | 'isAvailable'>
+  ): Promise<Product> {
+    const response = await fetch('/api/products', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(product),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || 'Falha ao cadastrar o produto.');
+    }
+
+    const result: ApiResponse<Product> = await response.json();
+    return result.data;
   },
 };
