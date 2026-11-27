@@ -30,11 +30,8 @@ export function Navbar({
         {/* Brand / Logo */}
         <Link
           href="/"
-          className="flex items-center gap-2.5 transition-opacity hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-[#D7B079] rounded-md px-1"
+          className="flex items-center transition-opacity hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-[#D7B079] rounded-md px-1"
         >
-          <span className="text-2xl" role="img" aria-label="Café">
-            ☕
-          </span>
           <span className="font-serif text-2xl font-bold tracking-tight text-[#FBF5EA]">
             {logoText}
           </span>

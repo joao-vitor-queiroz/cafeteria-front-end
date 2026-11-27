@@ -4,8 +4,7 @@ import { Button } from '@/components/ui/button';
 export default function NotFound() {
   return (
     <div className="flex min-h-[50vh] flex-col items-center justify-center px-4 text-center">
-      <span className="text-5xl">☕🔍</span>
-      <h2 className="mt-4 text-3xl font-extrabold tracking-tight text-stone-900 dark:text-stone-100">
+      <h2 className="text-3xl font-extrabold tracking-tight text-stone-900 dark:text-stone-100">
         404 - Página não encontrada
       </h2>
       <p className="mt-2 text-stone-600 dark:text-stone-400">

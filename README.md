@@ -1,4 +1,4 @@
-# ☕ Cafeteria Front-End
+# Cafeteria Front-End
 
 > Projeto final da cadeira de Programação Front-End.
 

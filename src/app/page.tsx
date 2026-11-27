@@ -31,10 +31,6 @@ export default function HomePage() {
       {/* Conteúdo Base Limpo */}
       <main className="flex-1 flex flex-col justify-center items-center px-4 py-16 sm:px-6 lg:px-8 text-center">
         <div className="max-w-2xl mx-auto space-y-6">
-          <span className="text-4xl sm:text-5xl" role="img" aria-label="Café">
-            ☕
-          </span>
-
           <h1 className="font-serif text-4xl sm:text-5xl font-bold tracking-tight text-[#1E2782] leading-tight">
             Cafés artesanais & momentos especiais
           </h1>

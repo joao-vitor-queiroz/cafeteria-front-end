@@ -21,8 +21,7 @@ export default function GlobalError({ error, reset }: ErrorProps) {
   return (
     <div className="flex min-h-[50vh] flex-col items-center justify-center px-4 text-center">
       <div className="max-w-md rounded-2xl border border-stone-200 bg-white p-8 shadow-sm dark:border-stone-800 dark:bg-stone-900">
-        <span className="text-4xl">☕⚠️</span>
-        <h2 className="mt-4 text-2xl font-bold tracking-tight text-stone-900 dark:text-stone-100">
+        <h2 className="text-2xl font-bold tracking-tight text-stone-900 dark:text-stone-100">
           Ops! Algo deu errado
         </h2>
         <p className="mt-2 text-sm text-stone-600 dark:text-stone-400">

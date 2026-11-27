@@ -19,8 +19,7 @@ export function Footer({ storeName = 'Cafeteria Gourmet' }: FooterProps) {
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           {/* Brand & Slogan */}
           <div className="text-center md:text-left">
-            <div className="flex items-center justify-center md:justify-start gap-2">
-              <span className="text-xl">☕</span>
+            <div className="flex items-center justify-center md:justify-start">
               <span className="font-serif text-xl font-bold tracking-tight text-[#1E2782]">
                 {storeName}
               </span>
