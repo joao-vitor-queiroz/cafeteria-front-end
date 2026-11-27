@@ -1,9 +1,8 @@
 import { NextResponse } from 'next/server';
-import { back4appFetch, Back4AppQueryResponse } from '@/lib/back4app';
+import { parseClient, ParseObjectBase } from '@/lib/parse';
 import { Product, ProductCategory } from '@/types';
 
-interface ParseProduct {
-  objectId: string;
+interface ParseProduct extends ParseObjectBase {
   name: string;
   description: string;
   price: number;
@@ -63,16 +62,15 @@ const DEFAULT_FALLBACK_PRODUCTS: Product[] = [
 
 /**
  * GET /api/products
- * Busca os produtos no Back4App de forma segura no servidor.
+ * Consulta a classe Product no Back4App utilizando o Cliente Parse no servidor.
  */
 export async function GET() {
   try {
-    const data = await back4appFetch<Back4AppQueryResponse<ParseProduct>>(
-      '/classes/Product'
-    );
+    const results = await parseClient.query<ParseProduct>('Product', {
+      order: '-createdAt',
+    });
 
-    // Se o banco ainda não possuir itens cadastrados, retorna os produtos de demonstração
-    if (!data.results || data.results.length === 0) {
+    if (!results || results.length === 0) {
       return NextResponse.json({
         success: true,
         data: DEFAULT_FALLBACK_PRODUCTS,
@@ -80,7 +78,7 @@ export async function GET() {
       });
     }
 
-    const mappedProducts: Product[] = data.results.map((item) => ({
+    const mappedProducts: Product[] = results.map((item) => ({
       id: item.objectId,
       name: item.name,
       description: item.description,
@@ -97,9 +95,8 @@ export async function GET() {
       isFallback: false,
     });
   } catch (error) {
-    console.error('[API Products Error]:', error);
+    console.error('[API Products GET Error via parseClient]:', error);
 
-    // Fallback defensivo para alta disponibilidade e continuidade da aplicação
     return NextResponse.json({
       success: true,
       data: DEFAULT_FALLBACK_PRODUCTS,
@@ -110,14 +107,14 @@ export async function GET() {
 
 /**
  * POST /api/products
- * Cadastra um novo produto no Back4App com validação segura de entrada.
+ * Cria um novo produto no Back4App via parseClient.create com sanitização de entrada.
  */
 export async function POST(request: Request) {
   try {
     const body = await request.json();
     const { name, description, price, category, imageUrl, preparationTimeMinutes } = body;
 
-    // Validação estrita de entrada (Input Validation)
+    // Validação estrita de entrada
     if (!name || typeof name !== 'string' || name.trim().length === 0) {
       return NextResponse.json(
         { success: false, message: 'O nome do produto é obrigatório.' },
@@ -127,7 +124,7 @@ export async function POST(request: Request) {
 
     if (typeof price !== 'number' || price <= 0) {
       return NextResponse.json(
-        { success: false, message: 'O preço deve ser um número positivo.' },
+        { success: false, message: 'O preço deve ser um valor numérico positivo.' },
         { status: 400 }
       );
     }
@@ -161,13 +158,7 @@ export async function POST(request: Request) {
           : undefined,
     };
 
-    const created = await back4appFetch<{ objectId: string; createdAt: string }>(
-      '/classes/Product',
-      {
-        method: 'POST',
-        body: JSON.stringify(payload),
-      }
-    );
+    const created = await parseClient.create('Product', payload);
 
     const newProduct: Product = {
       id: created.objectId,
@@ -179,9 +170,9 @@ export async function POST(request: Request) {
       { status: 201 }
     );
   } catch (error) {
-    console.error('[API Products POST Error]:', error);
+    console.error('[API Products POST Error via parseClient]:', error);
     return NextResponse.json(
-      { success: false, message: 'Falha ao cadastrar produto.' },
+      { success: false, message: 'Falha ao cadastrar o produto no Back4App.' },
       { status: 500 }
     );
   }
