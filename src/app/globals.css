@@ -1,26 +1,47 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Paleta Oficial do Design System (design-system1/paleta.pdf) */
+  --color-marinho: #1E2782;
+  --color-petroleo: #1E5B82;
+  --color-terracota: #823B1E;
+  --color-ocre: #82591E;
+  --color-areia: #D7B079;
+
+  /* Cores Neutras */
+  --color-papel: #FBF5EA;
+  --color-linho: #F1E4CC;
+  --color-tinta: #2A1D10;
+  --color-cinza-quente: #6B5A45;
+
+  --background: var(--color-papel);
+  --foreground: var(--color-tinta);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+@theme {
+  --color-marinho: #1E2782;
+  --color-petroleo: #1E5B82;
+  --color-terracota: #823B1E;
+  --color-ocre: #82591E;
+  --color-areia: #D7B079;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-papel: #FBF5EA;
+  --color-linho: #F1E4CC;
+  --color-tinta: #2A1D10;
+  --color-cinza-quente: #6B5A45;
+
+  --font-titles: var(--font-fraunces), serif;
+  --font-body: var(--font-dm-sans), sans-serif;
+  --font-serif: var(--font-fraunces), serif;
+  --font-sans: var(--font-dm-sans), sans-serif;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-papel);
+  color: var(--color-tinta);
+  font-family: var(--font-dm-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-fraunces), serif;
 }
